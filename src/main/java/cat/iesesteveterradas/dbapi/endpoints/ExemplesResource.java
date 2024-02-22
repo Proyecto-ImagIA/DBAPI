@@ -54,6 +54,22 @@ public class ExemplesResource {
     }
 
     @GET
+    @Path("/obtener_configuracion")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response obtenerConfiguracion() throws IOException{
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode jsonResponse = mapper.createObjectNode();
+        jsonResponse.put("nombre", "Mario");
+        jsonResponse.put("velocidad", 10);
+        jsonResponse.put("salto", 20);
+        jsonResponse.put("fuerza", 30);        
+        String json = mapper.writeValueAsString(jsonResponse);
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+    }
+
+
+
+    @GET
     @Path("/obtenir_imatge")
     @Produces("image/jpg") // Assegura't que el tipus MIME coincideix amb el format de la teva imatge
     public Response obtenirImatge() {
