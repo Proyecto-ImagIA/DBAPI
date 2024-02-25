@@ -5,7 +5,7 @@
     <session-factory>
         <!-- Database connection settings -->
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/dbapi</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/dbapi?allowPublicKeyRetrieval=true</property>
         <property name="hibernate.connection.username">usuari</property>
         <property name="hibernate.connection.password">password</property>
 
@@ -28,7 +28,8 @@
         <property name="hibernate.hbm2ddl.auto">create</property>
 
         <!-- Specify the mapping resources -->
-        <mapping class="cat.iesesteveterradas.dbapi.persistencia.Configuracio"/>
-        <mapping class="cat.iesesteveterradas.dbapi.persistencia.Propietat"/>
+        <mapping class="cat.iesesteveterradas.dbapi.persistencia.Peticio"/>
+        <mapping class="cat.iesesteveterradas.dbapi.persistencia.Usuari"/>
+
     </session-factory>
 </hibernate-configuration>

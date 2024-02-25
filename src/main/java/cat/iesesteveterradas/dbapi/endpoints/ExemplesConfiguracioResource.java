@@ -168,5 +168,37 @@ public class ExemplesConfiguracioResource {
         } catch (Exception e) {
             return Response.serverError().entity("{\"status\":\"ERROR\",\"message\":\"Error en eliminar la propietat de la configuració\"}").build();
         }
-    }    
+    }
+
+    @POST
+    @Path("/api/usuaris/registrar")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response registrarUsuari(String jsonInput) {
+        try {
+            JSONObject input = new JSONObject(jsonInput);
+            String nom = input.optString("nom", null);
+            String email = input.optString("email", null);
+            String contrasenya = input.optString("contrasenya", null);
+
+            if (nom == null || nom.trim().isEmpty() || email == null || email.trim().isEmpty() || contrasenya == null || contrasenya.trim().isEmpty()) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("{\"status\":\"ERROR\",\"message\":\"Nom, email i contrasenya requerits\"}").build();
+            }
+
+            // Utilitza el mètode registrarUsuari de Manager per crear un nou usuari
+            boolean registrat = true;//ConfiguracioDAO.registrarUsuari(nom, email, contrasenya);
+            if (!registrat) {
+                return Response.status(Response.Status.CONFLICT).entity("{\"status\":\"ERROR\",\"message\":\"Usuari ja existent\"}").build();
+            }
+
+            // Construeix resposta confirmant el registre
+            JSONObject jsonResponse = new JSONObject();
+            jsonResponse.put("status", "OK");
+            jsonResponse.put("message", "Usuari registrat amb èxit");
+
+            return Response.ok(jsonResponse.toString(4)).build();
+        } catch (Exception e) {
+            return Response.serverError().entity("{\"status\":\"ERROR\",\"message\":\"Error en registrar l'usuari\"}").build();
+        }
+    }
 }

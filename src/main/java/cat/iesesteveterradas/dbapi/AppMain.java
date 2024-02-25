@@ -25,11 +25,12 @@ public class AppMain {
     // URI base on el servidor HTTP de Grizzly escoltarà
     private static String baseURI;
 
-    public static void iniciarHibernate(){
-        Configuracio configuracio = ConfiguracioDAO.trobaOCreaConfiguracioPerNom("Configuració 1");
+/* public static void iniciarHibernate(){
+        Usuari usuari = ConfiguracioDAO.trobaOCreaConfiguracioPerNom("Configuració 1");
         Propietat propietat = new Propietat("versió", "1.0.1");
         ConfiguracioDAO.afegeixPropietatAConfiguracio(propietat, configuracio);
     }
+    */    
 
     public static HttpServer iniciarServidorAPI(String host, int port) {
         // Construeix la URI de base utilitzant els paràmetres host i port
@@ -70,7 +71,7 @@ public class AppMain {
             int port = cmd.hasOption("port") ? Integer.parseInt(cmd.getOptionValue("port")) : 8080;
 
             logger.info("Iniciant hibernate...");
-            iniciarHibernate();
+//            iniciarHibernate();
 
             logger.info("Iniciant el servidor...");
             final HttpServer server = iniciarServidorAPI(host, port);
