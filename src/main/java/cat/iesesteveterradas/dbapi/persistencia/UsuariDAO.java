@@ -59,6 +59,7 @@ public class UsuariDAO {
         }
         return usuari;
     }
+    
 
     public static void actualitzaUsuari(Usuari usuari) {
         Session session = SessionFactoryManager.getSessionFactory().openSession();
