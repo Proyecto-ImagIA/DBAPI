@@ -2,16 +2,11 @@ package cat.iesesteveterradas.dbapi.endpoints;
 
 import java.util.List;
 
-import org.hibernate.query.Query;
-
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import cat.iesesteveterradas.dbapi.persistencia.GenericDAO;
 import cat.iesesteveterradas.dbapi.persistencia.Peticio;
-import cat.iesesteveterradas.dbapi.persistencia.SessionFactoryManager;
 import cat.iesesteveterradas.dbapi.persistencia.Usuari;
 import cat.iesesteveterradas.dbapi.persistencia.UsuariDAO;
 import jakarta.ws.rs.Consumes;

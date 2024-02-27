@@ -15,16 +15,16 @@ public class Usuari {
     @Column(name = "user_id", unique = true, nullable = false)
     private Long userId;
 
-    @Column(name = "nickname")
+    @Column(name = "nickname", nullable = false, unique = true)
     private String nickname;
 
-    @Column(name = "telefon")
+    @Column(name = "telefon", nullable = false)
     private int telefon;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "contrasenya")
+    @Column(name = "contrasenya", nullable = false)
     private String contrasenya;
 
     @Column(name = "codi_validacio")

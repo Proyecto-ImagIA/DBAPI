@@ -1,6 +1,9 @@
 package cat.iesesteveterradas.dbapi.persistencia;
 
+import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.json.JSONObject;
 
 import jakarta.persistence.*;
 
@@ -17,7 +20,7 @@ public class Peticio {
     private String prompt;
 
     @Column(name = "data")
-    private Date data;
+    private LocalDateTime data;
 
     @Column(name = "model")
     private String model;
@@ -25,14 +28,14 @@ public class Peticio {
     @Column(name = "imatge")
     private String imatge;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private Usuari usuari;
 
     public Peticio() {
     }
 
-    public Peticio(String prompt, Date data, String model, String imatge, Usuari usuari) {
+    public Peticio(String prompt, LocalDateTime data, String model, String imatge, Usuari usuari) {
         this.prompt = prompt;
         this.data = data;
         this.model = model;
@@ -56,11 +59,11 @@ public class Peticio {
         this.prompt = prompt;
     }
 
-    public Date getData() {
+    public LocalDateTime getData() {
         return data;
     }
 
-    public void setData(Date data) {
+    public void setData(LocalDateTime data) {
         this.data = data;
     }
 
@@ -91,6 +94,17 @@ public class Peticio {
     @Override
     public String toString() {
         return "Peticio [peticioId=" + peticioId + ", prompt=" + prompt + ", data=" + data + ", model=" + model + ", imatge=" + imatge + ", usuari=" + usuari.getNickname() + "]";
+    }
+
+    public JSONObject toJson() {
+        JSONObject jsonPeticio = new JSONObject();
+        jsonPeticio.put("id", peticioId);
+        jsonPeticio.put("prompt", prompt);
+        jsonPeticio.put("data", data);
+        jsonPeticio.put("model", model);
+        jsonPeticio.put("imatge", imatge);
+        jsonPeticio.put("usuari", usuari.getUserId());
+        return jsonPeticio;
     }
 
 

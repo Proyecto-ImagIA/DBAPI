@@ -1,0 +1,77 @@
+package cat.iesesteveterradas.dbapi.persistencia;
+
+import java.time.LocalDateTime;
+import java.util.Collection;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
+public class PeticioDAO {
+    private static final Logger logger = LoggerFactory.getLogger(PeticioDAO.class);
+
+    public static Peticio crearPeticio(String prompt, LocalDateTime data, String model, String imatge, Usuari usuari) {
+        Session session = SessionFactoryManager.getSessionFactory().openSession();
+        Transaction tx = null;
+        Peticio peticio = null;
+        try {
+            tx = session.beginTransaction();
+            peticio = new Peticio(prompt, data, model, imatge, usuari);
+            session.save(peticio);
+            tx.commit();
+            logger.info("Nova petició creada amb el prompt: {}", prompt);
+        } catch (HibernateException e) {
+            if (tx != null)
+                tx.rollback();
+            peticio = null;
+            logger.error("Error al crear la petició", e);
+        } finally {
+            session.close();
+        }
+        return peticio;
+    }
+
+    public static Collection<Peticio> llistarPeticions() {
+        Session session = SessionFactoryManager.getSessionFactory().openSession();
+        Transaction tx = null;
+        Collection<Peticio> peticions = null;
+        try {
+            tx = session.beginTransaction();
+            peticions = session.createQuery("FROM Peticio").list();
+            tx.commit();
+        } catch (HibernateException e) {
+            if (tx != null)
+                tx.rollback();
+            logger.error("Error al llistar les peticions", e);
+        } finally {
+            session.close();
+        }
+        return peticions;
+    }
+
+    public static Collection<Peticio> llistarPeticionsPerUsuari(Usuari usuari) {
+        Session session = SessionFactoryManager.getSessionFactory().openSession();
+        Transaction tx = null;
+        Collection<Peticio> peticions = null;
+        try {
+            tx = session.beginTransaction();
+            Query<Peticio> query = session.createQuery("FROM Peticio WHERE usuari = :usuari", Peticio.class);
+            query.setParameter("usuari", usuari);
+            peticions = query.list();
+            tx.commit();
+        } catch (HibernateException e) {
+            if (tx != null)
+                tx.rollback();
+            logger.error("Error al llistar les peticions per usuari", e);
+        } finally {
+            session.close();
+        }
+        return peticions;
+    }
+
+
+}
