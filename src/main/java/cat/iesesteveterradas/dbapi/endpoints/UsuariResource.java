@@ -10,9 +10,12 @@ import cat.iesesteveterradas.dbapi.persistencia.Peticio;
 import cat.iesesteveterradas.dbapi.persistencia.Usuari;
 import cat.iesesteveterradas.dbapi.persistencia.UsuariDAO;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -80,6 +83,36 @@ public class UsuariResource {
         }
     }
 
+    @GET
+    @Path("/obtenir_usuari_per_id/{usuariId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response obtenirUsuariPerId(@PathParam("usuariId") long usuariId){
+        try {
+            // Utilitza el mètode get de GenericDAO per obtenir l'usuari amb l'ID especificat
+            Usuari usuari = UsuariDAO.getUsuariPerId(usuariId);
+
+            if (usuari != null) {
+                JSONObject jsonResponse = new JSONObject();
+                jsonResponse.put("status", "OK");
+                jsonResponse.put("message", "Usuari trobat");
+                jsonResponse.put("data", usuari.toJson());
+                return Response.ok(jsonResponse.toString(4)).build();
+            } else {
+                JSONObject jsonResponse = new JSONObject();
+                jsonResponse.put("status", "ERROR");
+                jsonResponse.put("message", "Usuari no trobat");
+                jsonResponse.put("data", "No s'ha pogut trobar l'usuari");
+                return Response.status(Response.Status.NOT_FOUND).entity(jsonResponse.toString(4)).build();
+            }
+        } catch (Exception e) {
+            JSONObject jsonResponse = new JSONObject();
+            jsonResponse.put("status", "ERROR");
+            jsonResponse.put("message", "Error al obtenir l'usuari");
+            jsonResponse.put("data", e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(jsonResponse.toString(4)).build();
+        }
+    }
+
     @POST
     @Path("/registrar_usuari")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -111,6 +144,90 @@ public class UsuariResource {
             JSONObject jsonResponse = new JSONObject();
             jsonResponse.put("status", "ERROR");
             jsonResponse.put("message", "Error al registrar l'usuari");
+            jsonResponse.put("data", e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(jsonResponse.toString(4)).build();
+        }
+    }
+
+    @DELETE
+    @Path("/eliminar_usuari/{usuariId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response eliminarUsuari(@PathParam("usuariId") Long usuariId){
+        try {
+            // Utilitza el mètode get de GenericDAO per obtenir l'usuari amb l'ID especificat
+            Usuari usuari = UsuariDAO.getUsuariPerId(usuariId);
+
+            if (usuari != null) {
+                // Utilitza el mètode delete de GenericDAO per eliminar l'usuari
+                UsuariDAO.eliminaUsuari(usuari);
+
+                JSONObject jsonResponse = new JSONObject();
+                jsonResponse.put("status", "OK");
+                jsonResponse.put("message", "Usuari eliminat amb èxit");
+                jsonResponse.put("data", usuari.toJson());
+                return Response.ok(jsonResponse.toString(4)).build();
+            } else {
+                JSONObject jsonResponse = new JSONObject();
+                jsonResponse.put("status", "ERROR");
+                jsonResponse.put("message", "Usuari no trobat");
+                jsonResponse.put("data", "No s'ha pogut eliminar l'usuari");
+                return Response.status(Response.Status.NOT_FOUND).entity(jsonResponse.toString(4)).build();
+            }
+        } catch (Exception e) {
+            JSONObject jsonResponse = new JSONObject();
+            jsonResponse.put("status", "ERROR");
+            jsonResponse.put("message", "Error al eliminar l'usuari");
+            jsonResponse.put("data", e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(jsonResponse.toString(4)).build();
+        }
+    }
+
+    @PUT
+    @Path("/actualitzar_usuari/{usuariId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response actualitzarUsuari(String jsonUsuari, @PathParam("usuariId") Long usuariId){
+        try {
+            // Utilitza el mètode get de GenericDAO per obtenir l'usuari amb l'ID especificat
+            Usuari usuari = UsuariDAO.getUsuariPerId(usuariId);
+
+            if (usuari != null) {
+                JSONObject jsonObject = new JSONObject(jsonUsuari);
+                String nickname = jsonObject.getString("nickname");
+                int telefon = jsonObject.getInt("telefon");
+                String email = jsonObject.getString("email");
+                String contrasenya = jsonObject.getString("contrasenya");
+                String pla = jsonObject.getString("pla");
+                Boolean tos = jsonObject.getBoolean("tos");
+                Boolean validat = jsonObject.getBoolean("validat");
+
+                usuari.setNickname(nickname);
+                usuari.setTelefon(telefon);
+                usuari.setEmail(email);
+                usuari.setContrasenya(contrasenya);
+                usuari.setPla(pla);
+                usuari.setTos(tos);
+                usuari.setValidat(validat);
+
+                // Utilitza el mètode update de GenericDAO per actualitzar l'usuari
+                UsuariDAO.actualitzaUsuari(usuari);
+
+                JSONObject jsonResponse = new JSONObject();
+                jsonResponse.put("status", "OK");
+                jsonResponse.put("message", "Usuari actualitzat amb èxit");
+                jsonResponse.put("data", usuari.toJson());
+                return Response.ok(jsonResponse.toString(4)).build();
+            } else {
+                JSONObject jsonResponse = new JSONObject();
+                jsonResponse.put("status", "ERROR");
+                jsonResponse.put("message", "Usuari no trobat");
+                jsonResponse.put("data", "No s'ha pogut actualitzar l'usuari");
+                return Response.status(Response.Status.NOT_FOUND).entity(jsonResponse.toString(4)).build();
+            }
+        } catch (Exception e) {
+            JSONObject jsonResponse = new JSONObject();
+            jsonResponse.put("status", "ERROR");
+            jsonResponse.put("message", "Error al actualitzar l'usuari");
             jsonResponse.put("data", e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(jsonResponse.toString(4)).build();
         }

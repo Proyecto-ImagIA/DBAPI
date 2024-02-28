@@ -73,5 +73,35 @@ public class PeticioDAO {
         return peticions;
     }
 
+    public static void eliminaPeticio(Peticio peticio) {
+        Session session = SessionFactoryManager.getSessionFactory().openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.delete(peticio);
+            tx.commit();
+            logger.info("Petició eliminada amb èxit: {}", peticio.getPeticioId());
+        } catch (HibernateException e) {
+            if (tx != null)
+                tx.rollback();
+            logger.error("Error al eliminar la petició", e);
+        } finally {
+            session.close();
+        }
+    }
+
+    public static Peticio getPeticioPerId(Long peticioId) {
+        Session session = SessionFactoryManager.getSessionFactory().openSession();
+        Peticio peticio = null;
+        try {
+            peticio = session.get(Peticio.class, peticioId);
+        } catch (HibernateException e) {
+            logger.error("Error al trobar la petició per id", e);
+        } finally {
+            session.close();
+        }
+        return peticio;
+    }
+
 
 }

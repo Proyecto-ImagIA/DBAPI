@@ -1,8 +1,5 @@
 package cat.iesesteveterradas.dbapi;
 
-import cat.iesesteveterradas.dbapi.persistencia.Configuracio;
-import cat.iesesteveterradas.dbapi.persistencia.ConfiguracioDAO;
-import cat.iesesteveterradas.dbapi.persistencia.Propietat;
 import cat.iesesteveterradas.dbapi.persistencia.SessionFactoryManager;
 
 import org.apache.commons.cli.CommandLine;
