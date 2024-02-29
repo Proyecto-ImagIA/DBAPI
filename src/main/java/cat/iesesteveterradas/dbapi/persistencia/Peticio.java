@@ -27,7 +27,7 @@ public class Peticio {
     private String model;
 
     @Lob
-    @Column(name = "imatge")
+    @Column(name = "imatge", columnDefinition = "LONGTEXT")
     private byte[] imatge;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
