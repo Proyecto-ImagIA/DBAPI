@@ -30,7 +30,7 @@ public class Peticio {
     @Column(name = "imatge")
     private byte[] imatge;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private Usuari usuari;
 
