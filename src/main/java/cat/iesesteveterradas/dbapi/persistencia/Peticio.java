@@ -28,7 +28,7 @@ public class Peticio {
 
     @Lob
     @Column(name = "imatge", columnDefinition = "LONGTEXT")
-    private byte[] imatge;
+    private String imatge;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
@@ -37,7 +37,7 @@ public class Peticio {
     public Peticio() {
     }
 
-    public Peticio(String prompt, LocalDateTime data, String model, byte[] imatge, Usuari usuari) {
+    public Peticio(String prompt, LocalDateTime data, String model, String imatge, Usuari usuari) {
         this.prompt = prompt;
         this.data = data;
         this.model = model;
@@ -77,11 +77,11 @@ public class Peticio {
         this.model = model;
     }
 
-    public byte[] getImatge() {
+    public String getImatge() {
         return imatge;
     }
 
-    public void setImatge(byte[] imatge) {
+    public void setImatge(String imatge) {
         this.imatge = imatge;
     }
 
