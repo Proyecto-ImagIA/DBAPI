@@ -14,10 +14,15 @@ import org.slf4j.LoggerFactory;
 public class PeticioDAO {
     private static final Logger logger = LoggerFactory.getLogger(PeticioDAO.class);
 
-    public static Peticio crearPeticio(String prompt, LocalDateTime data, String model, String imatge, Usuari usuari) {
+    public static Peticio crearPeticio(String prompt, LocalDateTime data, String model, String imatgeb64, Usuari usuari) {
         Session session = SessionFactoryManager.getSessionFactory().openSession();
         Transaction tx = null;
         Peticio peticio = null;
+        byte[] imatge = null;
+        if (imatgeb64 != null) {
+            imatge = java.util.Base64.getDecoder().decode(imatgeb64);
+        }
+        
         try {
             tx = session.beginTransaction();
             peticio = new Peticio(prompt, data, model, imatge, usuari);
