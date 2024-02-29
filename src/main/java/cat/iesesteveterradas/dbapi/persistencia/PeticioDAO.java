@@ -19,10 +19,11 @@ public class PeticioDAO {
         Transaction tx = null;
         Peticio peticio = null;
         byte[] imatge = null;
+        
         if (imatgeb64 != null) {
             imatge = java.util.Base64.getDecoder().decode(imatgeb64);
         }
-        
+
         try {
             tx = session.beginTransaction();
             peticio = new Peticio(prompt, data, model, imatge, usuari);
