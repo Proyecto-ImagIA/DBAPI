@@ -1,5 +1,7 @@
 package cat.iesesteveterradas.dbapi.persistencia;
 
+import java.util.List;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -45,6 +47,18 @@ public class UsuariDAO {
         Usuari usuari = null;
         try {
             tx = session.beginTransaction();
+            Query query = session.createQuery("FROM Usuari WHERE nickname = :nickname OR telefon = :telefon OR email = :email");
+            query.setParameter("nickname", nickname);
+            query.setParameter("telefon", telefon);
+            query.setParameter("email", email);
+            List<Usuari> existingUsers = query.list();
+            
+            if (!existingUsers.isEmpty()) {
+                // Ya existe un usuario con el mismo nickname, teléfono o email
+                logger.error("Ya existe un usuario con el mismo nickname, teléfono o email");
+                return null;
+            }
+            
             usuari = new Usuari(nickname, telefon, email, null, contrasenya, false, false, "Free", null, null);
             session.save(usuari);
             tx.commit();
