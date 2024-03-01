@@ -2,9 +2,9 @@ package cat.iesesteveterradas.dbapi.endpoints;
 
 import java.util.List;
 import java.util.Random;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
+import okhttp3.*;
 
 import cat.iesesteveterradas.dbapi.persistencia.GenericDAO;
 import cat.iesesteveterradas.dbapi.persistencia.Peticio;
@@ -58,8 +58,7 @@ public class UsuariResource {
                         jsonPeticions.put(jsonPeticio);
                     }
                     jsonUsuari.put("peticions", jsonPeticions);
-                }
-                else {
+                } else {
                     jsonUsuari.put("peticions", "[]");
                 }
 
@@ -87,9 +86,10 @@ public class UsuariResource {
     @GET
     @Path("/obtenir_usuari_per_id/{usuariId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response obtenirUsuariPerId(@PathParam("usuariId") long usuariId){
+    public Response obtenirUsuariPerId(@PathParam("usuariId") long usuariId) {
         try {
-            // Utilitza el mètode get de GenericDAO per obtenir l'usuari amb l'ID especificat
+            // Utilitza el mètode get de GenericDAO per obtenir l'usuari amb l'ID
+            // especificat
             Usuari usuari = UsuariDAO.getUsuariPerId(usuariId);
 
             if (usuari != null) {
@@ -133,6 +133,7 @@ public class UsuariResource {
                 jsonResponse.put("status", "OK");
                 jsonResponse.put("message", "Usuari registrat amb èxit");
                 jsonResponse.put("data", usuari.toJson());
+                enviarCodigo(telefon, generarCodigo());
                 return Response.ok(jsonResponse.toString(4)).build();
             } else {
                 JSONObject jsonResponse = new JSONObject();
@@ -150,13 +151,13 @@ public class UsuariResource {
         }
     }
 
-
     @DELETE
     @Path("/eliminar_usuari/{usuariId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response eliminarUsuari(@PathParam("usuariId") Long usuariId){
+    public Response eliminarUsuari(@PathParam("usuariId") Long usuariId) {
         try {
-            // Utilitza el mètode get de GenericDAO per obtenir l'usuari amb l'ID especificat
+            // Utilitza el mètode get de GenericDAO per obtenir l'usuari amb l'ID
+            // especificat
             Usuari usuari = UsuariDAO.getUsuariPerId(usuariId);
 
             if (usuari != null) {
@@ -188,9 +189,10 @@ public class UsuariResource {
     @Path("/actualitzar_usuari/{usuariId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response actualitzarUsuari(String jsonUsuari, @PathParam("usuariId") Long usuariId){
+    public Response actualitzarUsuari(String jsonUsuari, @PathParam("usuariId") Long usuariId) {
         try {
-            // Utilitza el mètode get de GenericDAO per obtenir l'usuari amb l'ID especificat
+            // Utilitza el mètode get de GenericDAO per obtenir l'usuari amb l'ID
+            // especificat
             Usuari usuari = UsuariDAO.getUsuariPerId(usuariId);
 
             if (usuari != null) {
@@ -234,7 +236,8 @@ public class UsuariResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(jsonResponse.toString(4)).build();
         }
     }
-        public static String generarCodigo() {
+
+    public static String generarCodigo() {
         Random random = new Random();
         StringBuilder codigo = new StringBuilder();
         for (int i = 0; i < 4; i++) {
@@ -242,4 +245,20 @@ public class UsuariResource {
         }
         return codigo.toString();
     }
+
+    public static void enviarCodigo(String telefono, String codigo) {
+        OkHttpClient client = new OkHttpClient();
+        String url = "http://192.168.1.16:8000/api/sendsms/?api_token=MviGvRzlX5NeK1b5f4NtA1JZvHMn5cYRhb1DoInYMpbpOen2zHknFQsI5wFi7W1D&username=ams25&text=prova_1&receiver=619114601";
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+        try {
+            okhttp3.Response response = client.newCall(request).execute();
+            System.out.println(response.body().string());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
