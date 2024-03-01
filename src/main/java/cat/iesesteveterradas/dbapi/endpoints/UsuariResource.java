@@ -248,7 +248,7 @@ public class UsuariResource {
 
     public static void enviarCodigo(String telefono, String codigo) {
         OkHttpClient client = new OkHttpClient();
-        String url = "http://192.168.1.16:8000/api/sendsms/?api_token=MviGvRzlX5NeK1b5f4NtA1JZvHMn5cYRhb1DoInYMpbpOen2zHknFQsI5wFi7W1D&username=ams25&text=prova_1&receiver=619114601";
+        String url = "http://192.168.1.16:8000/api/sendsms/?api_token=MviGvRzlX5NeK1b5f4NtA1JZvHMn5cYRhb1DoInYMpbpOen2zHknFQsI5wFi7W1D&username=ams21&text=prova_1&receiver=619114601";
         Request request = new Request.Builder()
                 .url(url)
                 .get()
