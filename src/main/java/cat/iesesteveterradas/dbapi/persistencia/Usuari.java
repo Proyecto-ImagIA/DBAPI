@@ -19,7 +19,7 @@ public class Usuari {
     private String nickname;
 
     @Column(name = "telefon", nullable = false)
-    private int telefon;
+    private String telefon;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
@@ -29,6 +29,9 @@ public class Usuari {
 
     @Column(name = "codi_validacio")
     private String codiValidacio;
+
+    @Column(name = "api_key")
+    private String apiKey;
 
     @Column(name = "validat")
     private boolean validat;
@@ -46,7 +49,7 @@ public class Usuari {
     public Usuari() {
     }
 
-    public Usuari(String nickname, int telefon, String email, String codiValidacio, String contrasenya, boolean validat, boolean tos, String pla, Set<Peticio> peticions) {
+    public Usuari(String nickname, String telefon, String email, String codiValidacio, String contrasenya, boolean validat, boolean tos, String pla, Set<Peticio> peticions, String apiKey) {
         this.nickname = nickname;
         this.telefon = telefon;
         this.email = email;
@@ -56,6 +59,7 @@ public class Usuari {
         this.tos = tos;
         this.pla = pla;
         this.peticions = peticions;
+        this.apiKey = apiKey;
     }
 
 
@@ -67,6 +71,14 @@ public class Usuari {
         this.userId = userId;
     }
 
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
+    }
+
     public String getNickname() {
         return nickname;
     }
@@ -75,11 +87,11 @@ public class Usuari {
         this.nickname = nickname;
     }
 
-    public int getTelefon() {
+    public String getTelefon() {
         return telefon;
     }
 
-    public void setTelefon(int telefon) {
+    public void setTelefon(String telefon) {
         this.telefon = telefon;
     }
 
@@ -157,6 +169,7 @@ public class Usuari {
         jsonUsuari.put("validat", validat);
         jsonUsuari.put("tos", tos);
         jsonUsuari.put("pla", pla);
+        jsonUsuari.put("api_key", apiKey);
         return jsonUsuari;
     }
 

@@ -1,6 +1,7 @@
 package cat.iesesteveterradas.dbapi.endpoints;
 
 import java.util.List;
+import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -122,7 +123,7 @@ public class UsuariResource {
         try {
             JSONObject jsonObject = new JSONObject(jsonUsuari);
             String nickname = jsonObject.getString("nickname");
-            int telefon = jsonObject.getInt("telefon");
+            String telefon = jsonObject.getString("telefon");
             String email = jsonObject.getString("email");
             String contrasenya = jsonObject.getString("contrasenya");
             Usuari usuari = UsuariDAO.crearUsuari(nickname, telefon, email, contrasenya);
@@ -148,6 +149,7 @@ public class UsuariResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(jsonResponse.toString(4)).build();
         }
     }
+
 
     @DELETE
     @Path("/eliminar_usuari/{usuariId}")
@@ -194,7 +196,7 @@ public class UsuariResource {
             if (usuari != null) {
                 JSONObject jsonObject = new JSONObject(jsonUsuari);
                 String nickname = jsonObject.getString("nickname");
-                int telefon = jsonObject.getInt("telefon");
+                String telefon = jsonObject.getString("telefon");
                 String email = jsonObject.getString("email");
                 String contrasenya = jsonObject.getString("contrasenya");
                 String pla = jsonObject.getString("pla");
@@ -231,5 +233,13 @@ public class UsuariResource {
             jsonResponse.put("data", e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(jsonResponse.toString(4)).build();
         }
+    }
+        public static String generarCodigo() {
+        Random random = new Random();
+        StringBuilder codigo = new StringBuilder();
+        for (int i = 0; i < 4; i++) {
+            codigo.append(random.nextInt(10)); // Genera un número aleatorio entre 0 y 9
+        }
+        return codigo.toString();
     }
 }

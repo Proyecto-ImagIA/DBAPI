@@ -39,13 +39,13 @@ public class UsuariDAO {
         return usuari;
     }
 
-    public static Usuari crearUsuari(String nickname, int telefon, String email, String contrasenya) {
+    public static Usuari crearUsuari(String nickname, String telefon, String email, String contrasenya) {
         Session session = SessionFactoryManager.getSessionFactory().openSession();
         Transaction tx = null;
         Usuari usuari = null;
         try {
             tx = session.beginTransaction();
-            usuari = new Usuari(nickname, telefon, email, null, contrasenya, false, false, "Free", null);
+            usuari = new Usuari(nickname, telefon, email, null, contrasenya, false, false, "Free", null, null);
             session.save(usuari);
             tx.commit();
             logger.info("Nou usuari creat amb el nom: {}", nickname);
