@@ -18,7 +18,7 @@ public class Usuari {
     @Column(name = "nickname", nullable = false, unique = true)
     private String nickname;
 
-    @Column(name = "telefon", nullable = false)
+    @Column(name = "telefon", nullable = false, unique = true)
     private String telefon;
 
     @Column(name = "email", nullable = false, unique = true)
