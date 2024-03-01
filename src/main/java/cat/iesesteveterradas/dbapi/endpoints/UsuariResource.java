@@ -157,10 +157,12 @@ public class UsuariResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response validarUsuari(String jsonUsuari) {
         try {
+            System.out.println("Llega al servidor");
             JSONObject jsonObject = new JSONObject(jsonUsuari);
             String codi = jsonObject.getString("codi_validacio");
             String telefon = jsonObject.getString("telefon");
             Usuari usuari = UsuariDAO.getUsuariPerTelefon(telefon);
+            System.out.println("usuario obtenido" );
             
             if (usuari != null) {
                 if (usuari.getCodiValidacio().equals(codi)) {
@@ -169,6 +171,7 @@ public class UsuariResource {
                     jsonResponse.put("message", "Usuari validat amb èxit");
                     jsonResponse.put("data", usuari.toJson());
                     jsonResponse.put("apiKey", UsuariDAO.validarUsuari(usuari));
+                    System.out.println("usuario validado");
                     return Response.ok(jsonResponse.toString(4)).build();
                 } else {
                     JSONObject jsonResponse = new JSONObject();
