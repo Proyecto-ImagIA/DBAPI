@@ -302,6 +302,7 @@ public class UsuariResource {
         try {
             okhttp3.Response response = client.newCall(request).execute();
             usuari.setCodiValidacio(codigo);
+            UsuariDAO.actualitzaUsuari(usuari);
             System.out.println(response.body().string());
         } catch (Exception e) {
             e.printStackTrace();
