@@ -1,6 +1,7 @@
 package cat.iesesteveterradas.dbapi.persistencia;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -58,7 +59,7 @@ public class UsuariDAO {
                 logger.error("Ya existe un usuario con el mismo nickname, teléfono o email");
                 return null;
             }
-            
+
             usuari = new Usuari(nickname, telefon, email, null, contrasenya, false, false, "Free", null, null);
             session.save(usuari);
             tx.commit();
@@ -169,24 +170,41 @@ public class UsuariDAO {
     }
 
 
-    public static boolean validarUsuari(Usuari usuari) {
+    public static String validarUsuari(Usuari usuari) {
         Session session = SessionFactoryManager.getSessionFactory().openSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
             usuari.setValidat(true);
+            usuari.setApiKey(UUID.randomUUID().toString());
             session.update(usuari);
             tx.commit();
             logger.info("Usuari validat amb èxit: {}", usuari.getNickname());
-            return true;
+            return usuari.getApiKey();
         } catch (HibernateException e) {
             if (tx != null)
                 tx.rollback();
             logger.error("Error al validar l'usuari", e);
-            return false;
+            return null;
         } finally {
             session.close();
         }
+    }
+
+    public static Usuari getUsuariPerTelefon(String telefon) {
+        Session session = SessionFactoryManager.getSessionFactory().openSession();
+        Usuari usuari = null;
+        try {
+            Query<Usuari> query = session.createQuery("FROM Usuari WHERE telefon = :telefon", Usuari.class);
+            query.setParameter("telefon", telefon);
+            usuari = query.uniqueResult();
+        } catch (HibernateException e) {
+            usuari = null;
+            logger.error("Error al trobar l'usuari per telèfon", e);
+        } finally {
+            session.close();
+        }
+        return usuari;
     }
 
 

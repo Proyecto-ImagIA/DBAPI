@@ -133,7 +133,7 @@ public class UsuariResource {
                 jsonResponse.put("status", "OK");
                 jsonResponse.put("message", "Usuari registrat amb èxit");
                 jsonResponse.put("data", usuari.toJson());
-                enviarCodigo(telefon, generarCodigo());
+                enviarCodigo(telefon, generarCodigo(), usuari);
                 return Response.ok(jsonResponse.toString(4)).build();
             } else {
                 JSONObject jsonResponse = new JSONObject();
@@ -150,6 +150,49 @@ public class UsuariResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(jsonResponse.toString(4)).build();
         }
     }
+
+    @POST
+    @Path("/validar")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response validarUsuari(String jsonUsuari) {
+        try {
+            JSONObject jsonObject = new JSONObject(jsonUsuari);
+            String codi = jsonObject.getString("codi_validacio");
+            String telefon = jsonObject.getString("telefon");
+            Usuari usuari = UsuariDAO.getUsuariPerTelefon(telefon);
+            
+            if (usuari != null) {
+                if (usuari.getCodiValidacio().equals(codi)) {
+                    JSONObject jsonResponse = new JSONObject();
+                    jsonResponse.put("status", "OK");
+                    jsonResponse.put("message", "Usuari validat amb èxit");
+                    jsonResponse.put("data", usuari.toJson());
+                    jsonResponse.put("apiKey", UsuariDAO.validarUsuari(usuari));
+                    return Response.ok(jsonResponse.toString(4)).build();
+                } else {
+                    JSONObject jsonResponse = new JSONObject();
+                    jsonResponse.put("status", "ERROR");
+                    jsonResponse.put("message", "Codi incorrecte");
+                    jsonResponse.put("data", "No s'ha pogut validar l'usuari");
+                    return Response.status(Response.Status.NOT_FOUND).entity(jsonResponse.toString(4)).build();
+                }
+            } else {
+                JSONObject jsonResponse = new JSONObject();
+                jsonResponse.put("status", "ERROR");
+                jsonResponse.put("message", "Usuari no trobat");
+                jsonResponse.put("data", "No s'ha pogut validar l'usuari");
+                return Response.status(Response.Status.NOT_FOUND).entity(jsonResponse.toString(4)).build();
+            }
+        } catch (Exception e) {
+            JSONObject jsonResponse = new JSONObject();
+            jsonResponse.put("status", "ERROR");
+            jsonResponse.put("message", "Error al validar l'usuari");
+            jsonResponse.put("data", e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(jsonResponse.toString(4)).build();
+        }
+    }
+
 
     @DELETE
     @Path("/eliminar_usuari/{usuariId}")
@@ -246,15 +289,16 @@ public class UsuariResource {
         return codigo.toString();
     }
 
-    public static void enviarCodigo(String telefono, String codigo) {
+    public static void enviarCodigo(String telefono, String codigo, Usuari usuari) {
         OkHttpClient client = new OkHttpClient();
-        String url = "http://192.168.1.16:8000/api/sendsms/?api_token=MviGvRzlX5NeK1b5f4NtA1JZvHMn5cYRhb1DoInYMpbpOen2zHknFQsI5wFi7W1D&username=ams21&text=prova_1&receiver=619114601";
+        String url = "http://192.168.1.16:8000/api/sendsms/?api_token=MviGvRzlX5NeK1b5f4NtA1JZvHMn5cYRhb1DoInYMpbpOen2zHknFQsI5wFi7W1D&username=ams21&text="+codigo+"&receiver="+telefono;
         Request request = new Request.Builder()
                 .url(url)
                 .get()
                 .build();
         try {
             okhttp3.Response response = client.newCall(request).execute();
+            usuari.setCodiValidacio(codigo);
             System.out.println(response.body().string());
         } catch (Exception e) {
             e.printStackTrace();
