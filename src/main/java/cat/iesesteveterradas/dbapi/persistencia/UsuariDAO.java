@@ -142,8 +142,8 @@ public class UsuariDAO {
         Session session = SessionFactoryManager.getSessionFactory().openSession();
         Usuari usuari = null;
         try {
-            Query<Usuari> query = session.createQuery("FROM Usuari WHERE codiValidacio = :codiValidacio", Usuari.class);
-            query.setParameter("codiValidacio", codiValidacio);
+            Query<Usuari> query = session.createQuery("FROM Usuari WHERE codi_validacio = :codi_validacio", Usuari.class);
+            query.setParameter("codi_validacio", codiValidacio);
             usuari = query.uniqueResult();
         } catch (HibernateException e) {
             logger.error("Error al trobar l'usuari per codi de validació", e);
@@ -157,9 +157,9 @@ public class UsuariDAO {
         Session session = SessionFactoryManager.getSessionFactory().openSession();
         Usuari usuari = null;
         try {
-            Query<Usuari> query = session.createQuery("FROM Usuari WHERE email = :email AND codiValidacio = :codiValidacio", Usuari.class);
+            Query<Usuari> query = session.createQuery("FROM Usuari WHERE email = :email AND codi_validacio = :codi_validacio", Usuari.class);
             query.setParameter("email", email);
-            query.setParameter("codiValidacio", codiValidacio);
+            query.setParameter("codi_validacio", codiValidacio);
             usuari = query.uniqueResult();
         } catch (HibernateException e) {
             logger.error("Error al trobar l'usuari per email i codi de validació", e);
@@ -201,6 +201,22 @@ public class UsuariDAO {
         } catch (HibernateException e) {
             usuari = null;
             logger.error("Error al trobar l'usuari per telèfon", e);
+        } finally {
+            session.close();
+        }
+        return usuari;
+    }
+
+    public static Usuari getUsuariPerApiKey(String apiKey) {
+        Session session = SessionFactoryManager.getSessionFactory().openSession();
+        Usuari usuari = null;
+        try {
+            Query<Usuari> query = session.createQuery("FROM Usuari WHERE api_key = :api_key", Usuari.class);
+            query.setParameter("api_key", apiKey);
+            usuari = query.uniqueResult();
+        } catch (HibernateException e) {
+            usuari = null;
+            logger.error("Error al trobar l'usuari per api key", e);
         } finally {
             session.close();
         }

@@ -15,6 +15,7 @@ import cat.iesesteveterradas.dbapi.persistencia.UsuariDAO;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -59,24 +60,28 @@ public class PeticioResource {
             jsonResponse.put("status", "ERROR");
             jsonResponse.put("message", "Error al llistar les peticions");
             jsonResponse.put("data", e.getMessage());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(jsonResponse.toString(4)).build();        }
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(jsonResponse.toString(4)).build();
+        }
     }
 
     @POST
     @Path("/crear_peticio")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response crearPeticio(String jsonPeticio) {
+    public Response crearPeticio(@HeaderParam("Authorization") String apiKey, String jsonPeticio) {
         try {
+            Usuari usuari = validarToken(apiKey);
+            if (usuari == null) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity("Token d'autorització no vàlid").build();
+            }
+
             JSONObject peticio = new JSONObject(jsonPeticio);
             String prompt = peticio.getString("prompt");
             String model = peticio.getString("model");
             String imatge = peticio.getString("imatge");
-            int usuariId = peticio.getInt("usuari");
 
             // Utilitza el mètode get de GenericDAO per obtenir l'usuari amb l'ID
             // especificat
-            Usuari usuari = UsuariDAO.getUsuariPerId((long) usuariId);
 
             // Utilitza el mètode crearPeticio de PeticioDAO per crear una nova petició
             Peticio novaPeticio = PeticioDAO.crearPeticio(prompt, LocalDateTime.now(), model, imatge, usuari);
@@ -106,9 +111,10 @@ public class PeticioResource {
     @GET
     @Path("/obtenir_peticions_per_usuari_id/{usuariId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response obtenirPeticionsPerUsuariId(@PathParam("usuariId") long usuariId){
+    public Response obtenirPeticionsPerUsuariId(@PathParam("usuariId") long usuariId) {
         try {
-            // Utilitza el mètode obtenirPeticionsPerUsuariId de PeticioDAO per obtenir totes
+            // Utilitza el mètode obtenirPeticionsPerUsuariId de PeticioDAO per obtenir
+            // totes
             // les peticions d'un usuari
             Usuari usuari = UsuariDAO.getUsuariPerId(usuariId);
             List<?> peticions = (List<?>) PeticioDAO.llistarPeticionsPerUsuari(usuari);
@@ -148,7 +154,8 @@ public class PeticioResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response eliminarPeticio(@PathParam("peticioId") long peticioId) {
         try {
-            // Utilitza el mètode get de GenericDAO per obtenir la petició amb l'ID especificat
+            // Utilitza el mètode get de GenericDAO per obtenir la petició amb l'ID
+            // especificat
             Peticio peticio = PeticioDAO.getPeticioPerId(peticioId);
 
             if (peticio != null) {
@@ -180,7 +187,8 @@ public class PeticioResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response obtenirPeticioPerId(@PathParam("peticioId") long peticioId) {
         try {
-            // Utilitza el mètode get de GenericDAO per obtenir la petició amb l'ID especificat
+            // Utilitza el mètode get de GenericDAO per obtenir la petició amb l'ID
+            // especificat
             Peticio peticio = PeticioDAO.getPeticioPerId(peticioId);
 
             if (peticio != null) {
@@ -205,6 +213,15 @@ public class PeticioResource {
         }
     }
 
+    private Usuari validarToken(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return null;
+        }
 
+        // Extreu el token sense el prefix "Bearer "
+        String token = authHeader.substring(7);
+
+        return UsuariDAO.getUsuariPerApiKey(token);
+    } // Aquesta comparació és només un exemple
 
 }
