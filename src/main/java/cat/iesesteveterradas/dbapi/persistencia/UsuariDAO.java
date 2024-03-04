@@ -212,8 +212,8 @@ public class UsuariDAO {
         Session session = SessionFactoryManager.getSessionFactory().openSession();
         Usuari usuari = null;
         try {
-            Query<Usuari> query = session.createQuery("FROM Usuari WHERE api_key = '"+ apiKey +"'", Usuari.class);
             System.out.println(apiKey);
+            Query<Usuari> query = session.createQuery("FROM Usuari WHERE api_key = '"+ apiKey +"'", Usuari.class);
             System.out.println(query.getQueryString());
             query.setParameter("apikey", apiKey);
 
