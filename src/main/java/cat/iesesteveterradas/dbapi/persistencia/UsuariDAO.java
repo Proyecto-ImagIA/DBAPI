@@ -213,8 +213,12 @@ public class UsuariDAO {
         Usuari usuari = null;
         try {
             Query<Usuari> query = session.createQuery("FROM Usuari WHERE api_key = :apikey", Usuari.class);
+            System.out.println(apiKey);
+            System.out.println(query.getQueryString());
             query.setParameter("apikey", apiKey);
+
             usuari = query.uniqueResult();
+            System.out.println(usuari.getNickname());
         } catch (HibernateException e) {
             usuari = null;
             logger.error("Error al trobar l'usuari per api key", e);
