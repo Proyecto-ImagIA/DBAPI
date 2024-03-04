@@ -180,6 +180,7 @@ public class UsuariDAO {
             session.update(usuari);
             tx.commit();
             logger.info("Usuari validat amb èxit: {}", usuari.getNickname());
+            System.out.println(usuari.getApiKey());
             return usuari.getApiKey();
         } catch (HibernateException e) {
             if (tx != null)

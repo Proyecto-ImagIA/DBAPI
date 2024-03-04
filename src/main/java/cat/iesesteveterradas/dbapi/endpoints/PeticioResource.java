@@ -214,6 +214,7 @@ public class PeticioResource {
     }
 
     private Usuari validarToken(String authHeader) {
+        System.out.println(authHeader);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return null;
         }
