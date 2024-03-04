@@ -213,9 +213,9 @@ public class UsuariDAO {
         Usuari usuari = null;
         try {
             System.out.println(apiKey);
-            Query<Usuari> query = session.createQuery("FROM Usuari WHERE api_key = '"+ apiKey +"'", Usuari.class);
+            Query<Usuari> query = session.createQuery("FROM Usuari WHERE api_key = :api_key", Usuari.class);
             System.out.println(query.getQueryString());
-            query.setParameter("apikey", apiKey);
+            query.setParameter("api_key", apiKey);
 
             usuari = query.uniqueResult();
             System.out.println(usuari.getNickname());
