@@ -212,7 +212,7 @@ public class UsuariDAO {
         Session session = SessionFactoryManager.getSessionFactory().openSession();
         Usuari usuari = null;
         try {
-            Query<Usuari> query = session.createQuery("FROM Usuari WHERE api_key = :api_key", Usuari.class);
+            Query<Usuari> query = session.createQuery("FROM Usuari WHERE CAST(api_key AS CHAR) = :api_key", Usuari.class);
             query.setParameter("api_key", apiKey);
             usuari = query.uniqueResult();
         } catch (HibernateException e) {

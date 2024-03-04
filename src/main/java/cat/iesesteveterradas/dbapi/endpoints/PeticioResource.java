@@ -221,6 +221,8 @@ public class PeticioResource {
         String token = authHeader.substring(7);
         System.err.println("Token: " + token);
 
+        System.out.println(token);
+
         return UsuariDAO.getUsuariPerApiKey(token);
     } // Aquesta comparació és només un exemple
 
