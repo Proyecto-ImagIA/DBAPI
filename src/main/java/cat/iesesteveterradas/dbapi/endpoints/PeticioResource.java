@@ -1,7 +1,6 @@
 package cat.iesesteveterradas.dbapi.endpoints;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -217,9 +216,10 @@ public class PeticioResource {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return null;
         }
-
+        System.err.println("AuthHeader: " + authHeader);
         // Extreu el token sense el prefix "Bearer "
         String token = authHeader.substring(7);
+        System.err.println("Token: " + token);
 
         return UsuariDAO.getUsuariPerApiKey(token);
     } // Aquesta comparació és només un exemple

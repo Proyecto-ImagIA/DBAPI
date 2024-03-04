@@ -2,7 +2,6 @@ package cat.iesesteveterradas.dbapi.persistencia;
 
 import java.util.Set;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import jakarta.persistence.*;

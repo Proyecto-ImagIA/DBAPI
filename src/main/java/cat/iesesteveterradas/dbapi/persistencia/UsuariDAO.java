@@ -176,11 +176,12 @@ public class UsuariDAO {
         try {
             tx = session.beginTransaction();
             usuari.setValidat(true);
-            usuari.setApiKey(UUID.randomUUID().toString());
+            String apiKey = UUID.randomUUID().toString();
+            usuari.setApiKey(apiKey);
             session.update(usuari);
             tx.commit();
             logger.info("Usuari validat amb èxit: {}", usuari.getNickname());
-            return usuari.getApiKey();
+            return apiKey;
         } catch (HibernateException e) {
             if (tx != null)
                 tx.rollback();

@@ -1,7 +1,6 @@
 package cat.iesesteveterradas.dbapi.persistencia;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import org.json.JSONObject;
 
