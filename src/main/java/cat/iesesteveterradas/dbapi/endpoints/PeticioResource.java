@@ -214,13 +214,14 @@ public class PeticioResource {
     }
 
     private Usuari validarToken(String authHeader) {
-        System.out.println(authHeader);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return null;
         }
 
         // Extreu el token sense el prefix "Bearer "
         String token = authHeader.substring(7);
+
+        System.out.println(token);
 
         return UsuariDAO.getUsuariPerApiKey(token);
     } // Aquesta comparació és només un exemple
