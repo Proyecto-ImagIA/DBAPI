@@ -175,12 +175,12 @@ public class UsuariDAO {
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            usuari.setValidat(true);
             String apiKey = UUID.randomUUID().toString();
+            usuari.setValidat(true);
             usuari.setApiKey(apiKey);
             session.update(usuari);
             tx.commit();
-            logger.info("Usuari validat amb èxit: {}", usuari.getNickname());
+            logger.info("Usuari validat amb èxit: {}", usuari.getApiKey());
             return apiKey;
         } catch (HibernateException e) {
             if (tx != null)
@@ -212,7 +212,7 @@ public class UsuariDAO {
         Session session = SessionFactoryManager.getSessionFactory().openSession();
         Usuari usuari = null;
         try {
-            Query<Usuari> query = session.createQuery("FROM Usuari WHERE api_key = :apikey", Usuari.class);
+            Query<Usuari> query = session.createQuery("FROM Usuari WHERE api_key = ':apikey'", Usuari.class);
             System.out.println(apiKey);
             System.out.println(query.getQueryString());
             query.setParameter("apikey", apiKey);
