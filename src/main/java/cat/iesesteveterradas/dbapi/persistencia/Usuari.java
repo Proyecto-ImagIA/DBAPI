@@ -29,8 +29,7 @@ public class Usuari {
     @Column(name = "codi_validacio")
     private String codiValidacio;
 
-    @Lob
-    @Column(name = "api_key", columnDefinition = "LONGTEXT")
+    @Column(name = "api_key")
     private String apiKey;
 
     @Column(name = "validat")
