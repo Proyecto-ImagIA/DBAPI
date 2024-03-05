@@ -67,9 +67,9 @@ public class PeticioResource {
     @Path("/crear_peticio")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response crearPeticio(@HeaderParam("Authorization") String apiKey, String jsonPeticio) {
-        try {
-            Usuari usuari = validarToken(apiKey);
+    public Response crearPeticio(@HeaderParam("Authorization") String apiKey,@HeaderParam("telefon") String telefon, String jsonPeticio) {
+        try {  
+            Usuari usuari = validarToken(apiKey, telefon);
             if (usuari == null) {
                 return Response.status(Response.Status.UNAUTHORIZED).entity("Token d'autorització no vàlid").build();
             }
@@ -97,7 +97,7 @@ public class PeticioResource {
                 jsonResponse.put("message", "Error al crear la petició");
                 jsonResponse.put("data", "No s'ha pogut crear la petició");
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(jsonResponse.toString(4)).build();
-            }
+            } 
         } catch (Exception e) {
             JSONObject jsonResponse = new JSONObject();
             jsonResponse.put("status", "ERROR");
@@ -212,7 +212,7 @@ public class PeticioResource {
         }
     }
 
-    private Usuari validarToken(String authHeader) {
+    private Usuari validarToken(String authHeader, String telefon) {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return null;
         }
@@ -222,8 +222,12 @@ public class PeticioResource {
         System.err.println("Token: " + token);
 
         System.out.println(token);
+        Usuari usuari = UsuariDAO.getUsuariPerTelefon(telefon);
+        if (usuari == null || !usuari.getApiKey().equals(token)){
+            usuari = null;
+        }
 
-        return UsuariDAO.getUsuariPerApiKey(token);
+        return usuari;
     } // Aquesta comparació és només un exemple
 
 }
