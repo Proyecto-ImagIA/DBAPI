@@ -83,13 +83,13 @@ public class PeticioResource {
             // especificat
 
             // Utilitza el mètode crearPeticio de PeticioDAO per crear una nova petició
-            Peticio novaPeticio = PeticioDAO.crearPeticio(prompt, LocalDateTime.now(), model, imatge, usuari);
+            Peticio novaPeticio = PeticioDAO.crearPeticio(prompt, LocalDateTime.now(), model, imatge, null,  usuari);
 
             if (novaPeticio != null) {
                 JSONObject jsonResponse = new JSONObject();
                 jsonResponse.put("status", "OK");
                 jsonResponse.put("message", "Petició creada");
-                jsonResponse.put("data", novaPeticio.toJson());
+                jsonResponse.put("peticio_id", novaPeticio.getPeticioId());
                 return Response.ok(jsonResponse.toString(4)).build();
             } else {
                 JSONObject jsonResponse = new JSONObject();

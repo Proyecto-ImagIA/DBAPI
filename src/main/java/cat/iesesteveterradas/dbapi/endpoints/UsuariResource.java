@@ -132,7 +132,7 @@ public class UsuariResource {
                 JSONObject jsonResponse = new JSONObject();
                 jsonResponse.put("status", "OK");
                 jsonResponse.put("message", "Usuari registrat amb èxit");
-                jsonResponse.put("data", usuari.toJson());
+                jsonResponse.put("data", usuari.getUserId());
                 enviarCodigo(telefon, generarCodigo(), usuari);
                 return Response.ok(jsonResponse.toString(4)).build();
             } else {
@@ -282,6 +282,7 @@ public class UsuariResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(jsonResponse.toString(4)).build();
         }
     }
+
 
     public static String generarCodigo() {
         Random random = new Random();

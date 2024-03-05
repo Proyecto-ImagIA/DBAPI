@@ -208,6 +208,22 @@ public class UsuariDAO {
         return usuari;
     }
 
+    public static Usuari getUsuariPerPeticioId(Long peticioId) {
+        Session session = SessionFactoryManager.getSessionFactory().openSession();
+        Usuari usuari = null;
+        try {
+            Query<Usuari> query = session.createQuery("SELECT usuari FROM Peticio WHERE peticio_id = :peticio_id", Usuari.class);
+            query.setParameter("peticio_id", peticioId);
+            usuari = query.uniqueResult();
+        } catch (HibernateException e) {
+            usuari = null;
+            logger.error("Error al trobar l'usuari per peticio id", e);
+        } finally {
+            session.close();
+        }
+        return usuari;
+    }
+
     public static Usuari getUsuariPerApiKey(String apiKey) {
         Session session = SessionFactoryManager.getSessionFactory().openSession();
         Usuari usuari = null;

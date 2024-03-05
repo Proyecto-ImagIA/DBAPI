@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 public class PeticioDAO {
     private static final Logger logger = LoggerFactory.getLogger(PeticioDAO.class);
 
-    public static Peticio crearPeticio(String prompt, LocalDateTime data, String model, String imatge, Usuari usuari) {
+    public static Peticio crearPeticio(String prompt, LocalDateTime data, String model, String imatge, String response, Usuari usuari) {
         Session session = SessionFactoryManager.getSessionFactory().openSession();
         Transaction tx = null;
         Peticio peticio = null;
@@ -25,7 +25,7 @@ public class PeticioDAO {
 
         try {
             tx = session.beginTransaction();
-            peticio = new Peticio(prompt, data, model, imatge, usuari);
+            peticio = new Peticio(prompt, data, model, imatge, response, usuari);
             session.save(peticio);
             tx.commit();
             logger.info("Nova petició creada amb el prompt: {}", prompt);
@@ -90,6 +90,42 @@ public class PeticioDAO {
             if (tx != null)
                 tx.rollback();
             logger.error("Error al eliminar la petició", e);
+        } finally {
+            session.close();
+        }
+    }
+
+    public static void actualitzaPeticio(Peticio peticio) {
+        Session session = SessionFactoryManager.getSessionFactory().openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.update(peticio);
+            tx.commit();
+            logger.info("Petició actualitzada amb èxit: {}", peticio.getPeticioId());
+        } catch (HibernateException e) {
+            if (tx != null)
+                tx.rollback();
+            logger.error("Error al actualitzar la petició", e);
+        } finally {
+            session.close();
+        }
+    }
+
+    public static void actualitzarResposta(Long peticioId, String response) {
+        Session session = SessionFactoryManager.getSessionFactory().openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            Peticio peticio = session.get(Peticio.class, peticioId);
+            peticio.setResponse(response);
+            session.update(peticio);
+            tx.commit();
+            logger.info("Resposta de la petició actualitzada amb èxit: {}", peticioId);
+        } catch (HibernateException e) {
+            if (tx != null)
+                tx.rollback();
+            logger.error("Error al actualitzar la resposta de la petició", e);
         } finally {
             session.close();
         }

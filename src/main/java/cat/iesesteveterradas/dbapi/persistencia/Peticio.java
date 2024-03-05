@@ -29,6 +29,11 @@ public class Peticio {
     @Column(name = "imatge", columnDefinition = "LONGTEXT")
     private String imatge;
 
+    @Lob
+    @Column(name = "response", columnDefinition = "LONGTEXT")
+    private String response;
+
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private Usuari usuari;
@@ -36,11 +41,12 @@ public class Peticio {
     public Peticio() {
     }
 
-    public Peticio(String prompt, LocalDateTime data, String model, String imatge, Usuari usuari) {
+    public Peticio(String prompt, LocalDateTime data, String model, String imatge, String response, Usuari usuari) {
         this.prompt = prompt;
         this.data = data;
         this.model = model;
         this.imatge = imatge;
+        this.response = response;
         this.usuari = usuari;
     }
 
@@ -50,6 +56,14 @@ public class Peticio {
 
     public void setPeticioId(Long peticioId) {
         this.peticioId = peticioId;
+    }
+
+    public String getResponse() {
+        return response;
+    }
+
+    public void setResponse(String response) {
+        this.response = response;
     }
 
     public String getPrompt() {
@@ -104,6 +118,7 @@ public class Peticio {
         jsonPeticio.put("data", data);
         jsonPeticio.put("model", model);
         jsonPeticio.put("imatge", imatge);
+        jsonPeticio.put("response", response);
         jsonPeticio.put("usuari", usuari.getUserId());
         return jsonPeticio;
     }
