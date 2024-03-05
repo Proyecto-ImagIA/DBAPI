@@ -223,7 +223,7 @@ public class PeticioResource {
 
         System.out.println(token);
 
-        return UsuariDAO.getUsuariPerApiKey(token);
+        return UsuariDAO.getUsuariPerTelefon(token);
     } // Aquesta comparació és només un exemple
 
 }
