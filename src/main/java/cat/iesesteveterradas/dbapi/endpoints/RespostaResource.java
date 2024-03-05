@@ -25,7 +25,7 @@ public class RespostaResource {
 
         Usuari usuari = UsuariDAO.getUsuariPerPeticioId(peticioId);
         
-        if (usuari == null || !usuari.getApiKey().equals(apiKey)) {
+        if (usuari == null || !usuari.getApiKey().equals(apiKey.substring(7))) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Usuari no trobat").build();
         }
 
@@ -35,7 +35,7 @@ public class RespostaResource {
         if (resposta == null || resposta.isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Falta la resposta").build();
         }
-        
+
         PeticioDAO.actualitzarResposta(peticioId, resposta);
 
         JSONObject jsonResponse = new JSONObject();
